@@ -28,40 +28,56 @@ this.GNS.SoundCloudController = (function()	{
 
 	s.init = function( url, initComplate ){
 
-		document.body.innerHTML += '<canvas id="canvas"></canvas>';
+		var script = document.createElement( 'script' );
 
-		SC.initialize({
-	  		client_id: CLIENT_ID
-		});
+		script.type = 'text/javascript';
+		script.src = "//connect.soundcloud.com/sdk.js";
 
-		// get the sound info
-		SC.get('/resolve', {url: url}, function(sound){
+		var firstScript = document.getElementsByTagName( 'script' )[ 0 ];
+		firstScript.parentNode.insertBefore( script, firstScript );
+		
+		script.onload = scriptLoadComp;
+			
+		function scriptLoadComp(){
 
-		if(sound.errors)return;
+			console.log("SoundCloudController::scriptLoadComp");
+			
+			document.body.innerHTML += '<canvas id="canvas"></canvas>';
 
-		// succeed in getting the sound info
-		console.log(sound);
+			SC.initialize({
+		  		client_id: CLIENT_ID
+			});
 
-		// set the stream url to the audio element		 
-		_audio = document.createElement('audio');
-		_audio.crossOrigin = "anonymous";
-		_audio.src = sound.stream_url + '?client_id=' + CLIENT_ID;
-		_audio.play();
+			// get the sound info
+			SC.get('/resolve', {url: url}, function(sound){
 
-		// create and setup an analyser
-		var audioCtx = new (window.AudioContext || window.webkitAudioContext);
-		_analyser = audioCtx.createAnalyser();
-		_analyser.fftSize = 2048;
-		var source = audioCtx.createMediaElementSource(_audio);
-		source.connect(_analyser);
-		_analyser.connect(audioCtx.destination);
+				if(sound.errors)return;
 
-		_bytes = new Uint8Array(_analyser.frequencyBinCount);
+				// succeed in getting the sound info
+				console.log(sound);
+
+				// set the stream url to the audio element		 
+				_audio = document.createElement('audio');
+				_audio.crossOrigin = "anonymous";
+				_audio.src = sound.stream_url + '?client_id=' + CLIENT_ID;
+				_audio.play();
+
+				// create and setup an analyser
+				var audioCtx = new (window.AudioContext || window.webkitAudioContext);
+				_analyser = audioCtx.createAnalyser();
+				_analyser.fftSize = 2048;
+				var source = audioCtx.createMediaElementSource(_audio);
+				source.connect(_analyser);
+				_analyser.connect(audioCtx.destination);
+
+				_bytes = new Uint8Array(_analyser.frequencyBinCount);
 
 
-		initComplate();
+				initComplate();
 
-		});
+			});
+
+		}
 	}
 
 	s.debugShow = function(){
