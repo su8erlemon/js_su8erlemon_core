@@ -20,6 +20,20 @@ this.GNS.LoadingUtil = (function () {
 
     }
 
+    s.scriptLoad = function( url, callBack ){
+
+        var script = document.createElement( 'script' );
+
+        script.type = 'text/javascript';
+        script.src = url;
+
+        var firstScript = document.getElementsByTagName( 'script' )[ 0 ];
+        firstScript.parentNode.insertBefore( script, firstScript );
+        
+        script.onload = callBack;
+
+    }
+
     return p._self;
 
 })();

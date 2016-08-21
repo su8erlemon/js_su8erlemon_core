@@ -41,9 +41,8 @@
 		//=======================================		
 		// SoundCloudController class
 		//=======================================
-		/*
 		GNS.SoundCloudController.init( "https://soundcloud.com/christian_dittmann/la-hora-del-tigre",function(){
-			// GNS.SoundCloudController.debugShow();
+			GNS.SoundCloudController.debugShow();
 			
 			GNS.SoundCloudController.setPoint("low",3);
 			GNS.SoundCloudController.setPoint("mid",34);
@@ -59,7 +58,7 @@
 			loop();
 
 		});
-		*/
+		
 		
 	}
 

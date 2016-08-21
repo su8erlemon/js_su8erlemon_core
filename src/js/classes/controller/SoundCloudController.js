@@ -28,16 +28,11 @@ this.GNS.SoundCloudController = (function()	{
 
 	s.init = function( url, initComplate ){
 
-		var script = document.createElement( 'script' );
-
-		script.type = 'text/javascript';
-		script.src = "//connect.soundcloud.com/sdk.js";
-
-		var firstScript = document.getElementsByTagName( 'script' )[ 0 ];
-		firstScript.parentNode.insertBefore( script, firstScript );
+		GNS.LoadingUtil.multiLoad([
+			function(callback){ GNS.LoadingUtil.scriptLoad( "//connect.soundcloud.com/sdk.js",callback ); },
+			function(callback){ GNS.LoadingUtil.scriptLoad( "//cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js",callback ); }
+		],scriptLoadComp)
 		
-		script.onload = scriptLoadComp;
-			
 		function scriptLoadComp(){
 
 			console.log("SoundCloudController::scriptLoadComp");
@@ -71,7 +66,6 @@ this.GNS.SoundCloudController = (function()	{
 				_analyser.connect(audioCtx.destination);
 
 				_bytes = new Uint8Array(_analyser.frequencyBinCount);
-
 
 				initComplate();
 
