@@ -31,11 +31,36 @@
 		//=======================================		
 		// class sample
 		//=======================================
+		/*
 		var sampleClass = new GNS.SampleClass();
 		sampleClass.publicMethod();
-
 		GNS.SampleClass.staticMethod();
+		*/
 
+
+		//=======================================		
+		// SoundCloudController class
+		//=======================================
+		/*
+		GNS.SoundCloudController.init( "https://soundcloud.com/christian_dittmann/la-hora-del-tigre",function(){
+			// GNS.SoundCloudController.debugShow();
+			
+			GNS.SoundCloudController.setPoint("low",3);
+			GNS.SoundCloudController.setPoint("mid",34);
+			// GNS.SoundCloudController.removePoint("low");
+
+			function loop(){
+				requestAnimationFrame( loop );
+				// setTimeout( loop, 1000);
+				GNS.SoundCloudController.update();	
+				// console.log(GNS.SoundCloudController.getGain("low"));
+			}
+
+			loop();
+
+		});
+		*/
+		
 	}
 
 

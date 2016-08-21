@@ -9,7 +9,9 @@ var plumber = require("gulp-plumber");
 gulp.task("server", function() {
     browser({
         server: {
-            baseDir: "./../release"
+             baseDir: "./../release"
+            // ,index:"index.html"
+            ,index:"index-soundcloud.html"
         }
     });
 });
@@ -44,6 +46,7 @@ gulp.task( 'js', function () {
     "js/classes/controller/ResizeController.js",
     "js/classes/controller/SoundController.js",
     "js/classes/controller/SceneController.js",
+    "js/classes/controller/SoundCloudController.js",
     "js/classes/core/SampleClass.js",
     "js/classes/scene/TopScene.js",
     "js/classes/scene/ArticleScene.js",
