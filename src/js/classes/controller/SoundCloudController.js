@@ -16,6 +16,7 @@ this.GNS.SoundCloudController = (function()	{
 	var _bytes;
 	var _analyser;
 	var _points = {};
+	var _menuControllerElement;
 
 	var calculate_a_weighting = function(freq){
     	
@@ -28,6 +29,12 @@ this.GNS.SoundCloudController = (function()	{
 
 	s.init = function( url, initComplate ){
 
+
+		//Make controller
+		var tag = "<img src='assets/logo_white-af5006050dd9cba09b0c48be04feac57.png'>";
+		_menuControllerElement = document.createElement("div");
+		_menuControllerElement.innerHTML = tag;
+
 		GNS.LoadingUtil.multiLoad([
 			function(callback){ GNS.LoadingUtil.scriptLoad( "//connect.soundcloud.com/sdk.js",callback ); },
 			function(callback){ GNS.LoadingUtil.scriptLoad( "//cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.8/processing.min.js",callback ); }
@@ -37,7 +44,7 @@ this.GNS.SoundCloudController = (function()	{
 
 			console.log("SoundCloudController::scriptLoadComp");
 			
-			document.body.innerHTML += '<canvas id="canvas"></canvas>';
+			document.body.innerHTML += '<canvas id="SoundCloudController_debug"></canvas>';
 
 			SC.initialize({
 		  		client_id: CLIENT_ID
@@ -48,6 +55,10 @@ this.GNS.SoundCloudController = (function()	{
 
 				if(sound.errors)return;
 
+				//tag
+				_menuControllerElement.innerHTML += "<a href='" + sound.permalink_url + "' target='_blank' >" + sound.title + "</a><canvas id='SoundCloudController_equalizer'></canvas>";
+  
+
 				// succeed in getting the sound info
 				console.log(sound);
 
@@ -55,7 +66,6 @@ this.GNS.SoundCloudController = (function()	{
 				_audio = document.createElement('audio');
 				_audio.crossOrigin = "anonymous";
 				_audio.src = sound.stream_url + '?client_id=' + CLIENT_ID;
-				_audio.play();
 
 				// create and setup an analyser
 				var audioCtx = new (window.AudioContext || window.webkitAudioContext);
@@ -76,7 +86,9 @@ this.GNS.SoundCloudController = (function()	{
 
 	s.debugShow = function(){
 
-		var canvasElement = document.getElementById('canvas');
+		var canvasElement = document.getElementById('SoundCloudController_debug');
+		canvasElement.style.zIndex = 9999;
+		canvasElement.style.position = "absolute";
 		var ctx = canvasElement.getContext("2d");
 
 		var $p = new Processing( canvasElement );
@@ -147,11 +159,60 @@ this.GNS.SoundCloudController = (function()	{
 
 	}
 
+	s.getControllerElement = function(){
+		return _menuControllerElement;
+	}
+
+	var _equalizerCanvasElement;
 	s.play = function(){
 		_audio.play();
+		_isPlay = true;
+
+		if( _equalizerCanvasElement )return;
+
+		_equalizerCanvasElement = document.getElementById('SoundCloudController_equalizer');
+		context = _equalizerCanvasElement.getContext("2d");		
+		_equalizerCanvasElement.width  = 25;
+		_equalizerCanvasElement.height = 14;
+		_equalizerCanvasElement.onclick = function(){
+			s.togglePlayPause();
+		}
+		
+		function loop(){
+			setTimeout( loop, 33 );
+
+			context.clearRect( 0 , 0 , 25 , 14 );
+			context.beginPath();
+			if( _isPlay ){
+				context.fillStyle = "#ffffff";
+				var height = 0;
+				for(var i = 0; i < 5; i++){
+					height = (_bytes[i] - 160) * 0.1;
+					context.rect(  i*5 ,  16 - height , 4 , height);	
+				}
+			}else{
+				context.fillStyle = "#777777";
+				var height = 0;
+				for(var i = 0; i < 5; i++){
+					height = 10 - i;
+					context.rect(  i*5 ,  16 - height , 4 , height);	
+				}
+			}
+			context.fill();
+
+		}
+		loop();
+
+	}
+
+	var _isPlay = false;
+	s.togglePlayPause = function(){
+		if( _isPlay )s.pause();
+		else         s.play();
 	}
 
 	s.pause = function(){
+		_isPlay = false;
 		_audio.pause();	
 	}
 
