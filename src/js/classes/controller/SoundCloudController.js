@@ -177,9 +177,16 @@ this.GNS.SoundCloudController = (function()	{
 		_equalizerCanvasElement.onclick = function(){
 			s.togglePlayPause();
 		}
-		
+		_audio.loop = true;
+		_audio.volume = 0.0; 
 		function loop(){
 			setTimeout( loop, 33 );
+
+			if( _audio.volume < 0.99 ){
+				_audio.volume += 0.005;
+			}else{
+				_audio.volume = 1.0;
+			}
 
 			context.clearRect( 0 , 0 , 25 , 14 );
 			context.beginPath();
@@ -187,7 +194,7 @@ this.GNS.SoundCloudController = (function()	{
 				context.fillStyle = "#ffffff";
 				var height = 0;
 				for(var i = 0; i < 5; i++){
-					height = (_bytes[i] - 160) * 0.1;
+					height = 4 + _bytes[i*10] * 0.1;
 					context.rect(  i*5 ,  16 - height , 4 , height);	
 				}
 			}else{
@@ -236,7 +243,10 @@ this.GNS.SoundCloudController = (function()	{
 			for (var key in _points) {
 				if( i == _points[key].freq -1 )_points[key].gain += gain/3;
 				if( i == _points[key].freq +0 )_points[key].gain += gain/3;
-				if( i == _points[key].freq +1 )_points[key].gain += gain/3;
+				if( i == _points[key].freq +1 ){
+					_points[key].gain += gain/3;
+					if( _points[key].gain <= 130 )_points[key].gain = 0;
+				}
 			}
 		}
 	}
