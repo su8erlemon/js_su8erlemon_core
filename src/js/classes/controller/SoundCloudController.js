@@ -89,6 +89,8 @@ this.GNS.SoundCloudController = (function()	{
 		var canvasElement = document.getElementById('SoundCloudController_debug');
 		canvasElement.style.zIndex = 9999;
 		canvasElement.style.position = "absolute";
+		canvasElement.style.top = "0px";
+		canvasElement.style.left = "0px";
 		var ctx = canvasElement.getContext("2d");
 
 		var $p = new Processing( canvasElement );
@@ -253,6 +255,10 @@ this.GNS.SoundCloudController = (function()	{
 
 	s.getBytes = function(){
 		return _bytes;
+	}
+
+	s.getIsPlay = function(){
+		return _isPlay;
 	}
 
 	s.setPoint = function( label, freq ){
