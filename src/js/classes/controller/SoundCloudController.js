@@ -274,7 +274,7 @@ this.GNS.SoundCloudController = (function()	{
 	}
 
 	s.getGain = function( label ){
-
+		if( !_points.hasOwnProperty(label) )return 0;
 		return _points[label].gain
 	}
 
