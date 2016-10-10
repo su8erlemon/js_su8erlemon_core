@@ -175,14 +175,14 @@ this.GNS.SoundCloudController = (function()	{
 		_equalizerCanvasElement = document.getElementById('SoundCloudController_equalizer');
 		context = _equalizerCanvasElement.getContext("2d");		
 		_equalizerCanvasElement.width  = 25;
-		_equalizerCanvasElement.height = 14;
+		_equalizerCanvasElement.height = 12;
 		_equalizerCanvasElement.onclick = function(){
 			s.togglePlayPause();
 		}
 		_audio.loop = true;
 		_audio.volume = 0.0; 
 		function loop(){
-			setTimeout( loop, 33 );
+			setTimeout( loop, 66 );
 
 			if( _audio.volume < 0.99 ){
 				_audio.volume += 0.005;
@@ -190,13 +190,13 @@ this.GNS.SoundCloudController = (function()	{
 				_audio.volume = 1.0;
 			}
 
-			context.clearRect( 0 , 0 , 25 , 14 );
+			context.clearRect( 0 , 0 , 25 , 12 );
 			context.beginPath();
 			if( _isPlay ){
 				context.fillStyle = "#ffffff";
 				var height = 0;
 				for(var i = 0; i < 5; i++){
-					height = 4 + _bytes[i*10] * 0.1;
+					height = 4 + _bytes[i*10] * 0.1 + Math.random() * (i+2) * 4;
 					context.rect(  i*5 ,  16 - height , 4 , height);	
 				}
 			}else{
